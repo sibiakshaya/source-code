@@ -1,0 +1,51 @@
+import json
+import random
+# Sample symptom-disease mapping (you can expand this)
+symptom_disease_db = {
+ "fever": ["Flu", "Malaria", "COVID-19"],
+ "cough": ["Common Cold", "Bronchitis", "COVID-19"],
+ "headache": ["Migraine", "Tension Headache", "COVID-19"],
+ "fatigue": ["Anemia", "Thyroid Issues", "COVID-19"]
+}
+# Sample treatment database
+disease_treatment_db = {
+ "Flu": "Rest, fluids, and antiviral drugs",
+ "Malaria": "Antimalarial medication",
+ "COVID-19": "Isolation, rest, and supportive care",
+ "Common Cold": "Rest and over-the-counter medication",
+ "Bronchitis": "Cough medicine and rest",
+ "Migraine": "Pain relievers and rest",
+ "Tension Headache": "Stress reduction and pain relief",
+ "Anemia": "Iron supplements and diet changes",
+ "Thyroid Issues": "Thyroid hormone therapy"
+}
+def get_diagnosis(symptoms):
+ possible_diseases = {}
+ for symptom in symptoms:
+ diseases = symptom_disease_db.get(symptom.lower(), [])
+ for disease in diseases:
+ possible_diseases[disease] = possible_diseases.get(disease, 0) + 1
+ # Sort by likelihood
+ sorted_diseases = sorted(possible_diseases.items(), key=lambda x: x[1], reverse=True)
+ return [d[0] for d in sorted_diseases[:3]] # Top 3 matches
+def suggest_treatments(diseases):
+ treatments = {}
+ for disease in diseases:
+ treatment = disease_treatment_db.get(disease, "No treatment found.")
+ treatments[disease] = treatment
+ return treatments
+def main():
+ print("Welcome to the Healthcare Diagnosis and Treatment System")
+ symptoms = input("Enter your symptoms separated by commas: ").split(',')
+ symptoms = [s.strip().lower() for s in symptoms]
+ print("\nAnalyzing symptoms...")
+ diseases = get_diagnosis(symptoms)
+ print("\nPossible Diagnoses:")
+ for i, disease in enumerate(diseases, 1):
+ print(f"{i}. {disease}")
+ treatments = suggest_treatments(diseases)
+ print("\nSuggested Treatments:")
+ for disease, treatment in treatments.items():
+ print(f"{disease}: {treatment}")
+if __name__ == "__main__":
+ main()
